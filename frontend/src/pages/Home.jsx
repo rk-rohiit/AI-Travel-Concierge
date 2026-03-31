@@ -11,6 +11,7 @@ const Home = () => {
 
       {/* Upload first */}
       {/* <FileUpload /> */}
+      {/* Home section */}
 
       {/* Then chat */}
       <ChatBox />
