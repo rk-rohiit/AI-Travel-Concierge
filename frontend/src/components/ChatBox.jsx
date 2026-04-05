@@ -28,21 +28,15 @@ const ChatBox = () => {
     return id;
   });
 
-  // ✅ Scroll
+  // ✅ Scroll to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ✅ Load chat
+  // ❌ Disable old chat loading (avoids bugs)
   useEffect(() => {
-    const saved = localStorage.getItem("chat");
-    if (saved) setMessages(JSON.parse(saved));
+    localStorage.removeItem("chat");
   }, []);
-
-  // ✅ Save chat
-  useEffect(() => {
-    localStorage.setItem("chat", JSON.stringify(messages));
-  }, [messages]);
 
   // =========================
   // 📄 FILE UPLOAD
@@ -65,10 +59,11 @@ const ChatBox = () => {
         },
       ]);
     } catch (err) {
+      console.error(err);
       alert("Upload failed ❌");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   // =========================
@@ -77,11 +72,10 @@ const ChatBox = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
-    // ❗ Optional: block chat until file uploaded
-    if (!uploaded) {
-      alert("📄 Please upload a document first");
-      return;
-    }
+    // if (!uploaded) {
+    //   alert("📄 Please upload a document first");
+    //   return;
+    // }
 
     const userMsg = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMsg]);
@@ -90,35 +84,45 @@ const ChatBox = () => {
     setLoading(true);
 
     try {
-      const data = await sendMessage(input, sessionId);
+      const reply = await sendMessage(input, sessionId);
 
-      const botMsg = { sender: "bot", text: data.reply };
+      const botMsg = {
+        sender: "bot",
+        text: reply || "⚠️ Empty response",
+      };
+
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
+      console.error("CHAT ERROR:", err);
+
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "⚠️ Server error" },
+        {
+          sender: "bot",
+          text:
+            "⚠️ " +
+            (err?.response?.data?.error ||
+              err?.message ||
+              "Server error"),
+        },
       ]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <Box p={3} maxWidth="700px" mx="auto">
-      {/* <Typography variant="h4" mb={2}>
-        ✈️ AI Travel Concierge (RAG)
-      </Typography> */}
-
       {/* ================= CHAT AREA ================= */}
       <Box
         sx={{
           height: "400px",
           overflowY: "auto",
           border: "1px solid #ddd",
-          borderRadius: "10px",
+          borderRadius: "12px",
           p: 2,
           mb: 2,
+          background: "#fafafa",
         }}
       >
         {messages.map((msg, i) => (
@@ -130,21 +134,26 @@ const ChatBox = () => {
               display="inline-block"
               sx={{
                 bgcolor:
-                  msg.sender === "user" ? "primary.main" : "#f5f5f5",
+                  msg.sender === "user" ? "primary.main" : "#fff",
                 color: msg.sender === "user" ? "#fff" : "#000",
                 px: 2,
                 py: 1,
-                borderRadius: "12px",
+                borderRadius: "14px",
                 maxWidth: "80%",
                 my: 1,
+                boxShadow: 1,
               }}
             >
-              <ReactMarkdown>{msg.text}</ReactMarkdown>
+              <ReactMarkdown>
+                {msg.text || ""}
+              </ReactMarkdown>
             </Box>
           </Box>
         ))}
 
-        {loading && <Typography>Typing...</Typography>}
+        {loading && (
+          <Typography sx={{ mt: 1 }}>Typing...</Typography>
+        )}
 
         <div ref={chatEndRef} />
       </Box>

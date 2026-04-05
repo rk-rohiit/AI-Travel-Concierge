@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
-  timeout: 15000,
+  timeout: 0,
 });
 
 // ✅ Chat API
@@ -12,7 +12,8 @@ export const sendMessage = async (message, session_id) => {
       message,
       session_id,
     });
-    return response.data;
+
+    return response.data.reply; // ✅ FIXED
   } catch (error) {
     console.error("Chat API ERROR:", error?.response?.data || error.message);
     throw error;

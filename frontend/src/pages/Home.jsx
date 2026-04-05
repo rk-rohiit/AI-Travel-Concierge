@@ -9,11 +9,6 @@ const Home = () => {
         ✈️ AI Travel Concierge (RAG)
       </Typography>
 
-      {/* Upload first */}
-      {/* <FileUpload /> */}
-      {/* Home section */}
-
-      {/* Then chat */}
       <ChatBox />
     </Box>
   );
