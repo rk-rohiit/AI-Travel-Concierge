@@ -1,119 +1,161 @@
-import { Box, Typography, Button, Container } from "@mui/material";
-import { HiSparkles } from "react-icons/hi2"; // AI/Magic icon
-import { FiArrowRight } from "react-icons/fi"; // Clean arrow icon
+import { Box, Typography, Button, Container, Grid } from "@mui/material";
+import { FiArrowRight } from "react-icons/fi";
 
 const Hero = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        minHeight: "90vh",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
+        justifyContent: "center",
         textAlign: "center",
-        // Enhanced Gradient with a "glow" center
-        background: "radial-gradient(circle at center, #1a1a1a 0%, #000 100%)",
-        color: "white",
-        px: 3,
+        // Soft gradient background as per image
+        background: "radial-gradient(circle at 50% 50%, #ffffff 0%, #f8f9fa 100%)",
+        color: "#333",
+        px: 2,
         position: "relative",
-        overflow: "hidden"
+        overflow: "hidden",
+        pt: { xs: 10, md: 0 }
       }}
     >
-      {/* Decorative background "blobs" for that AI/Tech look */}
-      <Box sx={{
-        position: "absolute",
-        width: "300px",
-        height: "300px",
-        background: "rgba(59, 130, 246, 0.15)",
-        filter: "blur(100px)",
-        top: "20%",
-        left: "10%",
-        zIndex: 0
-      }} />
+      {/* --- Floating Decorative Elements (Destination Cards) --- */}
+      {/* Top Left */}
+      <Box
+        component="img"
+        src="https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=600" // Replace with your image paths
+        sx={{
+          position: "absolute",
+          width: { xs: 80, md: 120 },
+          top: "15%",
+          left: "10%",
+          borderRadius: "12px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+          transform: "rotate(-10deg)",
+          display: { xs: "none", sm: "block" }
+        }}
+      />
+      {/* Bottom Left */}
+      <Box
+        component="img"
+        src="https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=600"
+        sx={{
+          position: "absolute",
+          width: { xs: 90, md: 140 },
+          bottom: "15%",
+          left: "15%",
+          borderRadius: "12px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+          transform: "rotate(5deg)",
+          display: { xs: "none", sm: "block" }
+        }}
+      />
+      {/* Top Right */}
+      <Box
+        component="img"
+        src="https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=600"
+        sx={{
+          position: "absolute",
+          width: { xs: 100, md: 150 },
+          top: "10%",
+          right: "10%",
+          borderRadius: "12px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+          transform: "rotate(8deg)",
+          display: { xs: "none", sm: "block" }
+        }}
+      />
+      
+      {/* Dotted Lines / Plane path (Simplified) */}
+      <Box 
+        sx={{ 
+          position: "absolute", 
+          top: "5%", 
+          right: "25%", 
+          opacity: 0.6,
+          display: { xs: "none", md: "block" }
+        }}
+      >
+        <Typography sx={{ color: "#ff4d4d", fontSize: "2rem" }}>✈️</Typography>
+      </Box>
 
-      <Container maxWidth="md" sx={{ zIndex: 1 }}>
-        {/* Small AI Badge */}
-        <Box 
-          sx={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: 1, 
-            px: 2, 
-            py: 0.5, 
-            mb: 3, 
-            borderRadius: '20px', 
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: 'rgba(255,255,255,0.05)',
-            backdropFilter: 'blur(10px)'
+      <Container maxWidth="md" sx={{ zIndex: 2 }}>
+        {/* Main Heading */}
+        <Typography
+          variant="h1"
+          sx={{
+            fontWeight: 700,
+            fontSize: { xs: "2.5rem", md: "4rem" },
+            color: "#2d3436",
+            mb: 1,
           }}
         >
-          <HiSparkles style={{ color: '#60a5fa' }} />
-          <Typography variant="caption" sx={{ fontWeight: 600, letterSpacing: 1 }}>
-            POWERED BY GPT-4 & VEO
+          Your personal
+        </Typography>
+        <Typography
+          variant="h1"
+          sx={{
+            fontWeight: 300,
+            fontSize: { xs: "2.5rem", md: "4rem" },
+            color: "#636e72",
+            mb: 3,
+            fontStyle: "italic"
+          }}
+        >
+          Travel Agent
+        </Typography>
+
+        {/* Subtitle */}
+        <Typography
+          sx={{
+            color: "#636e72",
+            maxWidth: 500,
+            mx: "auto",
+            mb: 5,
+            fontSize: "1.1rem",
+            lineHeight: 1.6
+          }}
+        >
+          At <strong>Traveya</strong>, we're here to manage a trip fully tailored for you!
+        </Typography>
+
+        {/* Call to Action Button */}
+        <Button
+          variant="contained"
+          size="large"
+          sx={{
+            bgcolor: "#f6543b", // The coral/red color from your design
+            color: "white",
+            px: 5,
+            py: 1.8,
+            borderRadius: "50px", // Rounded pill shape
+            textTransform: "none",
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            boxShadow: "0 8px 20px rgba(246, 84, 59, 0.3)",
+            "&:hover": {
+              bgcolor: "#e0432c",
+              transform: "translateY(-2px)",
+            },
+          }}
+        >
+          Get started it
+        </Button>
+
+        {/* Quote Section (Matches the second part of your image) */}
+        <Box sx={{ mt: 15 }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 400, 
+              color: "#2d3436",
+              fontStyle: "italic",
+              maxWidth: 700,
+              mx: "auto"
+            }}
+          >
+            "...it's going to plan trips you never thought were possible."
           </Typography>
-        </Box>
-
-        <Typography 
-          variant="h2" 
-          fontWeight="800"
-          sx={{ 
-            fontSize: { xs: '2.5rem', md: '4rem' },
-            lineHeight: 1.1,
-            mb: 2
-          }}
-        >
-          Plan Your Dream Trip <br />
-          <span style={{ color: '#3b82f6' }}>with AI Precision.</span>
-        </Typography>
-
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            color: 'rgba(255,255,255,0.7)',
-            maxWidth: '600px',
-            mx: 'auto',
-            mb: 4,
-            fontWeight: 400
-          }}
-        >
-          Personalized itineraries, real-time booking insights, and smart travel suggestions—all in one intuitive concierge.
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button 
-            variant="contained" 
-            size="large"
-            endIcon={<FiArrowRight />}
-            sx={{ 
-              bgcolor: '#3b82f6', 
-              px: 4, 
-              py: 1.5, 
-              borderRadius: '12px',
-              textTransform: 'none',
-              fontSize: '1.1rem',
-              '&:hover': { bgcolor: '#2563eb' }
-            }}
-          >
-            Get Started
-          </Button>
-
-          <Button 
-            variant="outlined" 
-            size="large"
-            sx={{ 
-              px: 4, 
-              py: 1.5, 
-              borderRadius: '12px',
-              textTransform: 'none',
-              fontSize: '1.1rem',
-              borderColor: 'rgba(255,255,255,0.3)',
-              color: 'white',
-              '&:hover': { borderColor: 'white', background: 'rgba(255,255,255,0.05)' }
-            }}
-          >
-            View Demo
-          </Button>
         </Box>
       </Container>
     </Box>

@@ -1,108 +1,127 @@
-import { Box, Typography, Grid, Paper, Container, Avatar, Rating } from "@mui/material";
-import { RiDoubleQuotesL } from "react-icons/ri"; // Quote icon
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  Container,
+  Avatar,
+  Stack,
+  Divider,
+} from "@mui/material";
 
-const testimonials = [
-  {
-    name: "Rohit Sharma",
-    role: "Digital Nomad",
-    text: "This AI travel planner saved me hours! The itinerary it generated for my Japan trip was spot on with hidden gems I wouldn't have found otherwise.",
-    avatar: "R", // You can replace with image URLs later
-    color: "#3b82f6"
-  },
-  {
-    name: "Anjali Verma",
-    role: "Solo Traveler",
-    text: "The real-time weather insights and smart recommendations were a lifesaver during my trip to Bali. Best trip planning tool I’ve ever used.",
-    avatar: "A",
-    color: "#9333ea"
-  },
-  {
-    name: "Amit Singh",
-    role: "Business Traveler",
-    text: "Highly recommended for frequent travelers. It handles the logistics so I can focus on my meetings and exploring the city.",
-    avatar: "AS",
-    color: "#10b981"
-  },
-];
+const testimonial = {
+  name: "Samantha R.",
+  role: "Adventure Seeker",
+  location: "Vancouver, CA",
+  text: "Traveya changed how I travel! I used to spend weeks planning trips, stressing over every detail. This AI not only found me incredible hidden gems in Thailand but also seamlessly managed my bookings. I just showed up and enjoyed the adventure. It's like having a tech-savvy travel agent in my pocket.",
+  avatar: "S",
+};
 
 const Testimonials = () => {
   return (
-    <Box sx={{ py: { xs: 8, md: 12 }, background: "#050505", color: "white" }}>
+    <Box sx={{ py: 10, bgcolor: "#f9fafb" }}>
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: "center", mb: { xs: 6, md: 8 } }}>
-          <Typography 
-            variant="overline" 
-            sx={{ color: "#3b82f6", fontWeight: "bold", letterSpacing: 2 }}
+        {/* Header - Matching the minimal style in your design */}
+        <Box sx={{ textAlign: "center", mb: 8 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 500,
+              color: "#2d3436",
+              mb: 1,
+            }}
           >
-            COMMUNITY FEEDBACK
+            What our travelers say
           </Typography>
-          <Typography variant="h3" fontWeight="800" sx={{ fontSize: { xs: "2rem", md: "3rem" } }}>
-            What Our Explorers Say
+          <Typography
+            sx={{
+              color: "#636e72",
+              fontSize: "0.9rem",
+            }}
+          >
+            Real stories from real people who trusted Traveya.
           </Typography>
         </Box>
 
-        <Grid container spacing={4}>
-          {testimonials.map((t, i) => (
-            <Grid item xs={12} md={4} key={i}>
-              <Paper 
-                elevation={0}
-                sx={{ 
-                  p: 4, 
-                  height: '100%',
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: "24px",
-                  position: "relative",
-                  transition: "0.3s",
-                  "&:hover": {
-                    borderColor: "#3b82f6",
-                    background: "rgba(255, 255, 255, 0.05)",
-                  }
-                }}
-              >
-                {/* Quote Icon */}
-                <RiDoubleQuotesL size={40} style={{ color: "rgba(59, 130, 246, 0.2)", marginBottom: '-20px' }} />
-                
-                <Box sx={{ mb: 2, mt: 2 }}>
-                  <Rating value={5} readOnly size="small" sx={{ color: "#3b82f6" }} />
-                </Box>
-
-                <Typography 
-                  variant="body1" 
-                  sx={{ 
-                    fontStyle: "italic", 
-                    color: "rgba(255,255,255,0.8)", 
-                    mb: 4,
-                    lineHeight: 1.7 
+        {/* Testimonial Card - Matching image_0.png single-card layout */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 4, md: 6 },
+            borderRadius: "24px",
+            bgcolor: "#ffffff",
+            border: "1px solid #f0f0f0", // Light border as seen in the grid earlier
+            transition: "all 0.3s ease",
+            "&:hover": {
+              borderColor: "#f6543b", // Coral highlight linked to your brand
+              boxShadow: "0 10px 40px rgba(0,0,0,0.04)",
+            },
+          }}
+        >
+          <Grid container spacing={4} alignItems="center">
+            {/* User Profile Info (Left Side) */}
+            <Grid item xs={12} md={4}>
+              <Stack direction="row" alignItems="center" spacing={3}>
+                <Avatar
+                  sx={{
+                    bgcolor: "#f1f2f6",
+                    color: "#2d3436",
+                    fontSize: "1.5rem",
+                    fontWeight: 600,
+                    width: 64,
+                    height: 64,
                   }}
                 >
-                  "{t.text}"
-                </Typography>
-
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Avatar 
-                    sx={{ 
-                      bgcolor: t.color, 
-                      fontWeight: 'bold',
-                      width: 48,
-                      height: 48 
-                    }}
+                  {testimonial.avatar}
+                </Avatar>
+                <Box>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, color: "#2d3436", lineHeight: 1.2 }}
                   >
-                    {t.avatar}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {t.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.5)" }}>
-                      {t.role}
-                    </Typography>
-                  </Box>
+                    {testimonial.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#636e72", mt: 0.5 }}
+                  >
+                    {testimonial.role}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#b2bec3" }}
+                  >
+                    {testimonial.location}
+                  </Typography>
                 </Box>
-              </Paper>
+              </Stack>
             </Grid>
-          ))}
-        </Grid>
+
+            {/* Vertcal Divider (Hidden on mobile) */}
+            <Grid item xs={12} md={1} sx={{ display: { xs: "none", md: "block" } }}>
+              <Divider orientation="vertical" flexItem sx={{ height: "80px", mx: "auto" }} />
+            </Grid>
+
+            {/* Testimonial Text (Right Side) */}
+            <Grid item xs={12} md={7}>
+              <Typography
+                sx={{
+                  color: "#636e72",
+                  fontSize: "1rem",
+                  lineHeight: 1.8,
+                  fontStyle: "normal",
+                  position: "relative",
+                  px: { md: 2 }
+                }}
+              >
+                {/* Optional subtle quote graphic */}
+                <Box component="span" sx={{ color: "#f6543b", fontSize: '2rem', position: 'absolute', top: -15, left: -10 }}>“</Box>
+                {testimonial.text}
+                <Box component="span" sx={{ color: "#f6543b", fontSize: '2rem', position: 'absolute', bottom: -25, right: 10 }}>”</Box>
+              </Typography>
+            </Grid>
+          </Grid>
+        </Paper>
       </Container>
     </Box>
   );
