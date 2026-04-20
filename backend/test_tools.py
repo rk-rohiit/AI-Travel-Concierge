@@ -1,7 +1,15 @@
-from app.services.tools import search_tool, get_weather
+from app.services.ai_service import get_ai_response
 
-print("=== SEARCH TEST ===")
-print(search_tool.run("best places in Goa"))
+tests = [
+    "weather in delhi",
+    "best places in goa",
+    "convert usd to inr",
+    "what is in my pdf",
+    "",                     # edge case
+    "asdfghjkl",            # invalid input
+]
 
-print("\n=== WEATHER TEST ===")
-print(get_weather("Manali"))
+for t in tests:
+    print("\n====================")
+    print("QUERY:", t)
+    print(get_ai_response([{"role": "user", "content": t}]))

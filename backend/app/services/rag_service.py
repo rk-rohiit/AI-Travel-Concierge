@@ -46,12 +46,27 @@ def process_pdf(file_path):
         print("🔥 RAG ERROR:", e)
         raise e
     
+# def query_pdf(query):
+#     global vector_db
+
+#     if vector_db is None:
+#         return None
+
+#     docs = vector_db.similarity_search(query, k=3)
+
+#     return "\n\n".join([doc.page_content for doc in docs])
+
 def query_pdf(query):
     global vector_db
 
     if vector_db is None:
-        return None
+        return "No document uploaded yet"
 
-    docs = vector_db.similarity_search(query, k=3)
+    docs = vector_db.similarity_search_with_score(query, k=3)
 
-    return "\n\n".join([doc.page_content for doc in docs])
+    filtered = [
+        f"(Page {doc.metadata.get('page', '?')}) {doc.page_content}"
+        for doc, score in docs if score < 0.8
+    ]
+
+    return "\n\n".join(filtered) if filtered else "No relevant data found"
