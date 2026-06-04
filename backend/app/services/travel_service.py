@@ -1,13 +1,17 @@
 import os
 import requests
 from dotenv import load_dotenv
-import json
 
 load_dotenv()
 
 RAPID_API_KEY = os.getenv("RAPID_API_KEY")
 
-def search_hotels(city_dest_id: str, arrival_date: str, departure_date: str):
+
+def search_hotels(
+    city_dest_id,
+    arrival_date,
+    departure_date
+):
     url = "https://booking-com15.p.rapidapi.com/api/v1/hotels/searchHotels"
 
     querystring = {
@@ -30,53 +34,48 @@ def search_hotels(city_dest_id: str, arrival_date: str, departure_date: str):
     }
 
     try:
-        print("\n🔍 REQUEST DATA")
-        print("DEST ID:", city_dest_id)
-        print("ARRIVAL:", arrival_date)
-        print("DEPARTURE:", departure_date)
-
-        response = requests.get(url, headers=headers, params=querystring)
-
-        print("\n📡 STATUS:", response.status_code)
+        response = requests.get(
+            url,
+            headers=headers,
+            params=querystring
+        )
 
         data = response.json()
 
-        print("\n📦 RAW API RESPONSE:")
-        print(json.dumps(data, indent=2))
-
-        if response.status_code != 200:
-            return {"error": "API failed", "details": data}
-
         results = data.get("data", {}).get("hotels", [])
+
         hotels = []
 
         for item in results[:10]:
-            property_data = item.get("property", {})
-            price_data = property_data.get("priceBreakdown", {}).get("grossPrice", {})
 
-            hotel_info = {
+            property_data = item.get("property", {})
+
+            gross_price = (
+                property_data
+                .get("priceBreakdown", {})
+                .get("grossPrice", {})
+            )
+
+            hotels.append({
                 "name": property_data.get("name"),
                 "rating": property_data.get("reviewScore"),
-                "price": price_data.get("value"),
-                "currency": price_data.get("currency"),
+                "price": gross_price.get("value"),
+                "currency": gross_price.get("currency"),
                 "address": property_data.get("wishlistName"),
-            }
-
-            hotels.append(hotel_info)
-
-        print("\n✅ CLEANED HOTEL DATA:")
-        for hotel in hotels:
-            print(hotel)
+                "image": (
+                    property_data.get("photoUrls", [None])[0]
+                )
+            })
 
         return {
             "status": True,
-            "count": len(hotels),
             "hotels": hotels
         }
 
     except Exception as e:
-        print("\n❌ ERROR:", str(e))
+        print("HOTEL ERROR:", e)
+
         return {
-            "error": "Something went wrong",
-            "message": str(e)
+            "status": False,
+            "hotels": []
         }

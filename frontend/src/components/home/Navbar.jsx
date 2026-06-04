@@ -10,12 +10,13 @@ import {
   ListItem,
 } from "@mui/material";
 import { RiMenuLine, RiCloseLine, RiPlaneLine } from "react-icons/ri";
-
+import { useNavigate } from "react-router-dom";
 const NAV_LINKS = ["Features", "Popular Trips", "Testimonials", "FAQ"];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -27,6 +28,13 @@ const Navbar = () => {
     const id = label.toLowerCase().replace(/\s+/g, "-");
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setDrawerOpen(false);
+  };
+
+  const handleMove = () => {
+    // 1. Perform your authentication logic here...
+    
+    // 2. Redirect programmatically
+    navigate("/chat-bot");
   };
 
   return (
@@ -81,7 +89,7 @@ const Navbar = () => {
                   letterSpacing: "-0.5px",
                 }}
               >
-                Trave<span style={{ color: "#f6543b" }}>ya</span>
+                Rave<span style={{ color: "#f6543b" }}>ya</span>
               </Typography>
             </Box>
 
@@ -132,8 +140,9 @@ const Navbar = () => {
                   borderRadius: "8px",
                   "&:hover": { bgcolor: "rgba(0,0,0,0.04)" },
                 }}
+                onClick={handleMove}
               >
-                Log in
+                AI-Planner
               </Button>
               <Button
                 variant="contained"
@@ -176,7 +185,7 @@ const Navbar = () => {
       >
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography sx={{ fontWeight: 800, fontSize: "1.1rem", color: "#2d3436" }}>
-            Trave<span style={{ color: "#f6543b" }}>ya</span>
+            Rave<span style={{ color: "#f6543b" }}>ya</span>
           </Typography>
           <IconButton onClick={() => setDrawerOpen(false)} size="small">
             <RiCloseLine size={20} />

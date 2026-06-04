@@ -7,8 +7,15 @@ import {
   InputBase,
   MenuItem,
   Select,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Divider
 } from "@mui/material";
 import { RiSearchLine, RiMapPin2Line, RiCalendarLine, RiGroupLine, RiArrowRightLine } from "react-icons/ri";
+import { getTravelPlan } from "../../api/travelApi";
+import { useNavigate } from "react-router-dom";
 
 // ── floating destination cards data ──────────
 const FLOAT_CARDS = [
@@ -63,8 +70,57 @@ const STATS = [
 
 const Hero = () => {
   const [destination, setDestination] = useState("");
-  const [duration, setDuration]       = useState("7");
-  const [travelers, setTravelers]     = useState("2");
+  const [duration, setDuration] = useState("7");
+  const [travelers, setTravelers] = useState("2");
+
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+  const [travelData, setTravelData] = useState(null);
+  const [openResult, setOpenResult] = useState(false);
+
+const handlePlanTrip = async () => {
+  if (!destination.trim()) {
+    alert("Please enter a destination");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const today = new Date();
+
+    const arrival = today.toISOString().split("T")[0];
+
+    const departure = new Date(
+      today.getTime() + Number(duration) * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0];
+
+    const data = await getTravelPlan(
+      destination,
+      arrival,
+      departure
+    );
+
+    console.log("TRAVEL PLAN:", data);
+
+    // Save API response
+    setTravelData(data);
+
+    // Open popup
+    setOpenResult(true);
+
+  } catch (error) {
+    console.error("Travel Plan Error:", error);
+
+    alert("Failed to generate travel plan.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Box
@@ -251,7 +307,7 @@ const Hero = () => {
               disableUnderline
               sx={{ fontSize: "0.88rem", color: "#2d3436", minWidth: 90 }}
             >
-              {["3","5","7","10","14","21"].map((d) => (
+              {["3", "5", "7", "10", "14", "21"].map((d) => (
                 <MenuItem key={d} value={d}>{d} days</MenuItem>
               ))}
             </Select>
@@ -277,7 +333,7 @@ const Hero = () => {
               disableUnderline
               sx={{ fontSize: "0.88rem", color: "#2d3436", minWidth: 90 }}
             >
-              {["1","2","3","4","5","6+"].map((t) => (
+              {["1", "2", "3", "4", "5", "6+"].map((t) => (
                 <MenuItem key={t} value={t}>{t} traveler{t !== "1" ? "s" : ""}</MenuItem>
               ))}
             </Select>
@@ -289,6 +345,8 @@ const Hero = () => {
               variant="contained"
               disableElevation
               startIcon={<RiSearchLine size={17} />}
+              onClick={handlePlanTrip}
+              disabled={loading}
               sx={{
                 bgcolor: "#f6543b",
                 color: "#fff",
@@ -303,7 +361,7 @@ const Hero = () => {
                 "&:hover": { bgcolor: "#e0432c" },
               }}
             >
-              Plan my trip
+              {loading ? "Planning..." : "Plan my trip"}
             </Button>
           </Box>
         </Box>
@@ -382,6 +440,116 @@ const Hero = () => {
         <Typography sx={{ fontSize: "0.68rem", letterSpacing: 1, color: "#636e72", textTransform: "uppercase" }}>scroll</Typography>
         <RiArrowRightLine size={14} color="#636e72" style={{ transform: "rotate(90deg)" }} />
       </Box>
+      <Dialog
+  open={openResult}
+  onClose={() => setOpenResult(false)}
+  maxWidth="md"
+  fullWidth
+>
+  <DialogTitle>
+    ✈️ Travel Plan for {travelData?.city}
+  </DialogTitle>
+
+  <DialogContent>
+
+    {/* Weather */}
+
+    <Typography variant="h6" sx={{ mt: 2 }}>
+      🌦 Weather
+    </Typography>
+
+    <Typography>
+      Temperature: {travelData?.weather?.temperature}°C
+    </Typography>
+
+    <Typography>
+      Condition: {travelData?.weather?.condition}
+    </Typography>
+
+    <Divider sx={{ my: 2 }} />
+
+    {/* Hotels */}
+
+    <Typography variant="h6">
+      🏨 Recommended Hotels
+    </Typography>
+
+    {travelData?.hotels?.map((hotel, index) => (
+      <Box
+        key={index}
+        sx={{
+          border: "1px solid #eee",
+          borderRadius: 2,
+          p: 2,
+          mt: 1
+        }}
+      >
+        <Typography fontWeight="bold">
+          {hotel.name}
+        </Typography>
+
+        <Typography>
+          ⭐ {hotel.rating}
+        </Typography>
+
+        <Typography>
+          ₹ {hotel.price}
+        </Typography>
+      </Box>
+    ))}
+
+    <Divider sx={{ my: 2 }} />
+
+    {/* Itinerary */}
+
+    <Typography variant="h6">
+      📅 Itinerary
+    </Typography>
+
+    <Typography sx={{ mt: 1 }}>
+      Day 1
+    </Typography>
+
+    <ul>
+      {travelData?.itinerary?.day1?.map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+    <Typography>
+      Day 2
+    </Typography>
+
+    <ul>
+      {travelData?.itinerary?.day2?.map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+    <Typography>
+      Day 3
+    </Typography>
+
+    <ul>
+      {travelData?.itinerary?.day3?.map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+  </DialogContent>
+
+  <DialogActions>
+    <Button
+      onClick={() => setOpenResult(false)}
+      variant="contained"
+      sx={{
+        bgcolor: "#f6543b"
+      }}
+    >
+      Close
+    </Button>
+  </DialogActions>
+</Dialog>
 
       {/* ── Keyframes ── */}
       <style>{`

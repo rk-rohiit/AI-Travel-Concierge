@@ -2,28 +2,36 @@ from fastapi import APIRouter, Query
 
 from app.services.travel_service import search_hotels
 from app.services.ai_service import generate_itinerary
-from app.services.weather_service import get_weather   # ✅ ADD
+from app.services.weather_service import get_weather
+from app.services.location_service import get_destination_id
 
-router = APIRouter(prefix="/travel", tags=["Travel"])
+router = APIRouter(
+    prefix="/travel",
+    tags=["Travel"]
+)
 
 # =========================
 # 🏨 HOTELS
 # =========================
 @router.get("/hotels")
 def get_hotels(
-    city: str = Query(..., description="Enter city name (e.g. mumbai)"),
+    city: str = Query(..., description="Enter city name"),
     arrival_date: str = Query(..., description="YYYY-MM-DD"),
     departure_date: str = Query(..., description="YYYY-MM-DD")
 ):
-    city_map = {
-        "delhi": "-2092174",
-        "mumbai": "-2092174",
-        "goa": "-2092174"
-    }
+    dest_id = get_destination_id(city)
 
-    dest_id = city_map.get(city.lower(), "-2092174")
+    if not dest_id:
+        return {
+            "status": False,
+            "message": f"No destination found for {city}"
+        }
 
-    return search_hotels(dest_id, arrival_date, departure_date)
+    return search_hotels(
+        city_dest_id=dest_id,
+        arrival_date=arrival_date,
+        departure_date=departure_date
+    )
 
 
 # =========================
@@ -43,7 +51,7 @@ def get_itinerary(city: str):
 
 
 # =========================
-# 🚀 FULL TRAVEL PLAN (IMPORTANT 🔥)
+# 🚀 FULL TRAVEL PLAN
 # =========================
 @router.get("/plan")
 def travel_plan(
@@ -51,22 +59,29 @@ def travel_plan(
     arrival_date: str = Query(...),
     departure_date: str = Query(...)
 ):
-    city_map = {
-        "delhi": "-2092174",
-        "mumbai": "-2092174",
-        "goa": "-2092174"
-    }
+    dest_id = get_destination_id(city)
 
-    dest_id = city_map.get(city.lower(), "-2092174")
+    if not dest_id:
+        return {
+            "status": False,
+            "message": f"No destination found for {city}"
+        }
 
-    # ✅ Call all services
     weather_data = get_weather(city)
-    hotels_data = search_hotels(dest_id, arrival_date, departure_date)
+
+    hotels_data = search_hotels(
+        city_dest_id=dest_id,
+        arrival_date=arrival_date,
+        departure_date=departure_date
+    )
+
     itinerary_data = generate_itinerary(city)
 
     return {
+        "status": True,
         "city": city,
+        "destination_id": dest_id,
         "weather": weather_data,
         "hotels": hotels_data.get("hotels", []),
-        "itinerary": itinerary_data["itinerary"]
+        "itinerary": itinerary_data.get("itinerary", {})
     }
