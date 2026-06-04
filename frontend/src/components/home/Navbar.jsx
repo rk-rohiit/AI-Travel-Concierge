@@ -1,72 +1,248 @@
-import { AppBar, Toolbar, Typography, Button, Box, Container } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+} from "@mui/material";
+import { RiMenuLine, RiCloseLine, RiPlaneLine } from "react-icons/ri";
+
+const NAV_LINKS = ["Features", "Popular Trips", "Testimonials", "FAQ"];
 
 const Navbar = () => {
-  return (
-    <AppBar 
-      position="absolute" // Changed to absolute so it sits on top of the hero background
-      elevation={0} 
-      sx={{ 
-        background: "transparent", 
-        pt: 1 
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          
-          {/* Logo Section - Matching "Traveya" */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 700, 
-                color: "#2d3436", // Darker text for light background
-                fontSize: "1.5rem" 
-              }}
-            >
-              Traveya
-            </Typography>
-            <Box 
-              sx={{ 
-                width: 8, 
-                height: 8, 
-                bgcolor: "#f6543b", 
-                borderRadius: "50%",
-                mt: 1 
-              }} 
-            />
-          </Box>
+  const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-          {/* Navigation Links - Matching "Login / Sign up" style */}
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <Button 
-              sx={{ 
-                textTransform: 'none', 
-                color: "#f6543b", // Matching the coral red in your design
-                fontWeight: 500,
-                fontSize: "0.9rem",
-                '&:hover': { background: 'transparent', opacity: 0.8 }
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollTo = (label) => {
+    const id = label.toLowerCase().replace(/\s+/g, "-");
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setDrawerOpen(false);
+  };
+
+  return (
+    <>
+      <Box
+        component="nav"
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          transition: "all 0.35s ease",
+          background: scrolled
+            ? "rgba(255,255,255,0.85)"
+            : "transparent",
+          backdropFilter: scrolled ? "blur(16px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid transparent",
+          boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.06)" : "none",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: { xs: 60, md: 68 },
+            }}
+          >
+            {/* Logo */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
+              <Box
+                sx={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "10px",
+                  bgcolor: "#f6543b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <RiPlaneLine size={18} color="#fff" />
+              </Box>
+              <Typography
+                sx={{
+                  fontWeight: 800,
+                  fontSize: "1.25rem",
+                  color: "#2d3436",
+                  letterSpacing: "-0.5px",
+                }}
+              >
+                Trave<span style={{ color: "#f6543b" }}>ya</span>
+              </Typography>
+            </Box>
+
+            {/* Desktop nav links */}
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                gap: 0.5,
               }}
             >
-              Login
-            </Button>
-            
-            <Button 
-              variant="text" 
-              sx={{ 
-                textTransform: 'none', 
-                color: "#f6543b", 
-                fontWeight: 500,
-                fontSize: "0.9rem",
-                '&:hover': { background: 'transparent', opacity: 0.8 }
-              }}
+              {NAV_LINKS.map((link) => (
+                <Box
+                  key={link}
+                  component="button"
+                  onClick={() => scrollTo(link)}
+                  sx={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: "8px",
+                    fontSize: "0.88rem",
+                    fontWeight: 500,
+                    color: "#636e72",
+                    transition: "all 0.2s",
+                    "&:hover": {
+                      color: "#f6543b",
+                      bgcolor: "rgba(246,84,59,0.06)",
+                    },
+                  }}
+                >
+                  {link}
+                </Box>
+              ))}
+            </Box>
+
+            {/* CTA buttons */}
+            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1, alignItems: "center" }}>
+              <Button
+                sx={{
+                  textTransform: "none",
+                  color: "#2d3436",
+                  fontWeight: 500,
+                  fontSize: "0.88rem",
+                  px: 2,
+                  borderRadius: "8px",
+                  "&:hover": { bgcolor: "rgba(0,0,0,0.04)" },
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                variant="contained"
+                disableElevation
+                sx={{
+                  textTransform: "none",
+                  bgcolor: "#f6543b",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: "0.88rem",
+                  px: 2.5,
+                  py: 0.9,
+                  borderRadius: "8px",
+                  "&:hover": { bgcolor: "#e0432c" },
+                }}
+              >
+                Get started
+              </Button>
+            </Box>
+
+            {/* Mobile hamburger */}
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              sx={{ display: { xs: "flex", md: "none" }, color: "#2d3436" }}
             >
-              Sign up
-            </Button>
+              <RiMenuLine size={22} />
+            </IconButton>
           </Box>
-          
-        </Toolbar>
-      </Container>
-    </AppBar>
+        </Container>
+      </Box>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{
+          sx: { width: 260, pt: 2, px: 2 },
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+          <Typography sx={{ fontWeight: 800, fontSize: "1.1rem", color: "#2d3436" }}>
+            Trave<span style={{ color: "#f6543b" }}>ya</span>
+          </Typography>
+          <IconButton onClick={() => setDrawerOpen(false)} size="small">
+            <RiCloseLine size={20} />
+          </IconButton>
+        </Box>
+
+        <List disablePadding>
+          {NAV_LINKS.map((link) => (
+            <ListItem key={link} disablePadding sx={{ mb: 0.5 }}>
+              <Box
+                component="button"
+                onClick={() => scrollTo(link)}
+                sx={{
+                  width: "100%",
+                  textAlign: "left",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  px: 1.5,
+                  py: 1.1,
+                  borderRadius: "8px",
+                  fontSize: "0.92rem",
+                  fontWeight: 500,
+                  color: "#2d3436",
+                  "&:hover": { bgcolor: "rgba(246,84,59,0.06)", color: "#f6543b" },
+                }}
+              >
+                {link}
+              </Box>
+            </ListItem>
+          ))}
+        </List>
+
+        <Box sx={{ mt: 3, display: "flex", flexDirection: "column", gap: 1.5 }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderColor: "#e0e0e0",
+              color: "#2d3436",
+              borderRadius: "8px",
+              "&:hover": { borderColor: "#f6543b", color: "#f6543b", bgcolor: "transparent" },
+            }}
+          >
+            Log in
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            disableElevation
+            sx={{
+              textTransform: "none",
+              bgcolor: "#f6543b",
+              color: "#fff",
+              fontWeight: 600,
+              borderRadius: "8px",
+              "&:hover": { bgcolor: "#e0432c" },
+            }}
+          >
+            Get started
+          </Button>
+        </Box>
+      </Drawer>
+    </>
   );
 };
 

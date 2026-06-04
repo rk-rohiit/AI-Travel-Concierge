@@ -32,11 +32,38 @@ def search_node(state: AgentState):
         log_end("SEARCH", start)
 
 
+# def rag_node(state: AgentState):
+#     try:
+#         return {"output": query_pdf(state["input"]) or "No document found"}
+#     except:
+#         return {"output": "RAG failed"}
+
 def rag_node(state: AgentState):
     try:
-        return {"output": query_pdf(state["input"]) or "No document found"}
-    except:
-        return {"output": "RAG failed"}
+        result = query_pdf(state["input"])
+
+        # No PDF uploaded -> use normal search
+        if result is None:
+            return {
+                "output": search_tool.run(state["input"])
+            }
+
+        # PDF uploaded but nothing relevant
+        if result == "No relevant data found":
+            return {
+                "output": search_tool.run(state["input"])
+            }
+
+        return {
+            "output": result
+        }
+
+    except Exception as e:
+        print("RAG ERROR:", e)
+
+        return {
+            "output": search_tool.run(state["input"])
+        }
 
 
 def currency_node(state: AgentState):

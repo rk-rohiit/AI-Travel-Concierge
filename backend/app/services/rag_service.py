@@ -60,7 +60,8 @@ def query_pdf(query):
     global vector_db
 
     if vector_db is None:
-        return "No document uploaded yet"
+        # return "No document uploaded yet"
+        return None
 
     docs = vector_db.similarity_search_with_score(query, k=3)
 
