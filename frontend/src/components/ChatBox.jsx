@@ -36,10 +36,12 @@ function getSessionId() {
 
 // ── quick suggestions ─────────────────────────
 const SUGGESTIONS = [
-  "Plan a 7-day trip to Tokyo 🇯🇵",
-  "Best beaches under ₹1,500 budget",
-  "Hidden gems in Southeast Asia",
-  "Family trip to Europe — 2 adults + 2 kids",
+  "Plan a 3-day trip to Delhi",
+  "Plan a 5-day trip to Goa",
+  "Plan a 4-day trip to Mumbai",
+  "Plan a 7-day trip to Kerala",
+  "Plan a 5-day trip to Jaipur",
+  "Plan a 3-day trip to Agra",
 ];
 
 // ── file upload constants ─────────────────────
@@ -260,7 +262,7 @@ const ChatBox = () => {
                   bgcolor: isUser ? "#2d3436" : "#ffffff",
                   color: isUser ? "#ffffff" : "#2d3436",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                  maxWidth: "75%", fontSize: "0.88rem", lineHeight: 1.6,
+                  maxWidth: "85%", fontSize: "0.88rem", lineHeight: 1.6,
                   "& p": { m: 0 }, "& ul,& ol": { pl: 2, m: 0 }, "& li": { mb: 0.5 },
                   "& strong": { fontWeight: 700 },
                   "& a": { color: isUser ? "#74b9ff" : "#f6543b" },

@@ -141,7 +141,7 @@ const Footer = () => {
                 <RiPlaneLine size={18} color="#fff" />
               </Box>
               <Typography sx={{ fontWeight: 800, fontSize: "1.2rem", letterSpacing: "-0.5px" }}>
-                Trave<span style={{ color: "#f6543b" }}>ya</span>
+                Rave<span style={{ color: "#f6543b" }}>ya</span>
               </Typography>
             </Box>
 
@@ -160,7 +160,7 @@ const Footer = () => {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {[
                 { Icon: RiMapPin2Line, text: "Ludhiana, Punjab, India" },
-                { Icon: RiMailLine,    text: "hello@traveya.ai" },
+                { Icon: RiMailLine,    text: "hello@raveya.ai" },
                 { Icon: RiPhoneLine,   text: "+91 98765 43210" },
               ].map(({ Icon, text }) => (
                 <Box key={text} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -281,7 +281,7 @@ const Footer = () => {
               textAlign: { xs: "center", sm: "left" },
             }}
           >
-            © 2026 Traveya, Inc. All rights reserved. · Made with ❤️ for Indian travelers
+            © 2026 Raveya, Inc. All rights reserved. · Made with ❤️ for Indian travelers
           </Typography>
 
           <Box sx={{ display: "flex", gap: 0.25, order: { xs: 1, sm: 2 } }}>
