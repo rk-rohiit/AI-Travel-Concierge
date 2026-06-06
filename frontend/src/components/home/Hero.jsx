@@ -16,6 +16,7 @@ import {
 import { RiSearchLine, RiMapPin2Line, RiCalendarLine, RiGroupLine, RiArrowRightLine } from "react-icons/ri";
 import { getTravelPlan } from "../../api/travelApi";
 import { useNavigate } from "react-router-dom";
+import TravelResults from "../../pages/TravelResults";
 
 // ── floating destination cards data ──────────
 const FLOAT_CARDS = [
@@ -80,47 +81,47 @@ const Hero = () => {
   const [travelData, setTravelData] = useState(null);
   const [openResult, setOpenResult] = useState(false);
 
-const handlePlanTrip = async () => {
-  if (!destination.trim()) {
-    alert("Please enter a destination");
-    return;
-  }
+  const handlePlanTrip = async () => {
+    if (!destination.trim()) {
+      alert("Please enter a destination");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const today = new Date();
+      const today = new Date();
 
-    const arrival = today.toISOString().split("T")[0];
+      const arrival = today.toISOString().split("T")[0];
 
-    const departure = new Date(
-      today.getTime() + Number(duration) * 24 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .split("T")[0];
+      const departure = new Date(
+        today.getTime() + Number(duration) * 24 * 60 * 60 * 1000
+      )
+        .toISOString()
+        .split("T")[0];
 
-    const data = await getTravelPlan(
-      destination,
-      arrival,
-      departure
-    );
+      const data = await getTravelPlan(
+        destination,
+        arrival,
+        departure
+      );
 
-    console.log("TRAVEL PLAN:", data);
+      console.log("TRAVEL PLAN:", data);
 
-    // Save API response
-    setTravelData(data);
+      // Save API response
+      setTravelData(data);
 
-    // Open popup
-    setOpenResult(true);
+      // Open popup
+      setOpenResult(true);
 
-  } catch (error) {
-    console.error("Travel Plan Error:", error);
+    } catch (error) {
+      console.error("Travel Plan Error:", error);
 
-    alert("Failed to generate travel plan.");
-  } finally {
-    setLoading(false);
-  }
-};
+      alert("Failed to generate travel plan.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -168,7 +169,7 @@ const handlePlanTrip = async () => {
             borderRadius: "16px",
             overflow: "hidden",
             boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
-            transform: `rotate(₹{card.rotate})`,
+            transform: `rotate(${card.rotate})`,
             animation: "floatCard 4s ease-in-out infinite alternate",
             animationDelay: card.delay,
             zIndex: 1,
@@ -441,115 +442,19 @@ const handlePlanTrip = async () => {
         <RiArrowRightLine size={14} color="#636e72" style={{ transform: "rotate(90deg)" }} />
       </Box>
       <Dialog
-  open={openResult}
-  onClose={() => setOpenResult(false)}
-  maxWidth="md"
-  fullWidth
->
-  <DialogTitle>
-    ✈️ Travel Plan for {travelData?.city}
-  </DialogTitle>
-
-  <DialogContent>
-
-    {/* Weather */}
-
-    <Typography variant="h6" sx={{ mt: 2 }}>
-      🌦 Weather
-    </Typography>
-
-    <Typography>
-      Temperature: {travelData?.weather?.temperature}°C
-    </Typography>
-
-    <Typography>
-      Condition: {travelData?.weather?.condition}
-    </Typography>
-
-    <Divider sx={{ my: 2 }} />
-
-    {/* Hotels */}
-
-    <Typography variant="h6">
-      🏨 Recommended Hotels
-    </Typography>
-
-    {travelData?.hotels?.map((hotel, index) => (
-      <Box
-        key={index}
-        sx={{
-          border: "1px solid #eee",
-          borderRadius: 2,
-          p: 2,
-          mt: 1
-        }}
+        open={openResult}
+        onClose={() => setOpenResult(false)}
+        fullScreen
       >
-        <Typography fontWeight="bold">
-          {hotel.name}
-        </Typography>
-
-        <Typography>
-          ⭐ {hotel.rating}
-        </Typography>
-
-        <Typography>
-          ₹ {hotel.price}
-        </Typography>
-      </Box>
-    ))}
-
-    <Divider sx={{ my: 2 }} />
-
-    {/* Itinerary */}
-
-    <Typography variant="h6">
-      📅 Itinerary
-    </Typography>
-
-    <Typography sx={{ mt: 1 }}>
-      Day 1
-    </Typography>
-
-    <ul>
-      {travelData?.itinerary?.day1?.map((item, i) => (
-        <li key={i}>{item}</li>
-      ))}
-    </ul>
-
-    <Typography>
-      Day 2
-    </Typography>
-
-    <ul>
-      {travelData?.itinerary?.day2?.map((item, i) => (
-        <li key={i}>{item}</li>
-      ))}
-    </ul>
-
-    <Typography>
-      Day 3
-    </Typography>
-
-    <ul>
-      {travelData?.itinerary?.day3?.map((item, i) => (
-        <li key={i}>{item}</li>
-      ))}
-    </ul>
-
-  </DialogContent>
-
-  <DialogActions>
-    <Button
-      onClick={() => setOpenResult(false)}
-      variant="contained"
-      sx={{
-        bgcolor: "#f6543b"
-      }}
-    >
-      Close
-    </Button>
-  </DialogActions>
-</Dialog>
+        <DialogContent sx={{ p: 0 }}>
+          {travelData && (
+            <TravelResults
+              data={travelData}
+              onClose={() => setOpenResult(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* ── Keyframes ── */}
       <style>{`

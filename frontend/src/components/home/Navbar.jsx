@@ -10,13 +10,17 @@ import {
   ListItem,
 } from "@mui/material";
 import { RiMenuLine, RiCloseLine, RiPlaneLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 const NAV_LINKS = ["Features", "Popular Trips", "Testimonials", "FAQ"];
+import { RiRobot2Line } from "react-icons/ri";
+import ChatBox from "../ChatBox";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -30,12 +34,12 @@ const Navbar = () => {
     setDrawerOpen(false);
   };
 
-  const handleMove = () => {
-    // 1. Perform your authentication logic here...
-    
-    // 2. Redirect programmatically
-    navigate("/chat-bot");
-  };
+  // const handleMove = () => {
+  //   // 1. Perform your authentication logic here...
+
+  //   // 2. Redirect programmatically
+  //   navigate("/chat-bot");
+  // };
 
   return (
     <>
@@ -131,6 +135,8 @@ const Navbar = () => {
             {/* CTA buttons */}
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1, alignItems: "center" }}>
               <Button
+                onClick={() => setChatOpen(true)}
+                startIcon={<RiRobot2Line />}
                 sx={{
                   textTransform: "none",
                   color: "#2d3436",
@@ -140,7 +146,7 @@ const Navbar = () => {
                   borderRadius: "8px",
                   "&:hover": { bgcolor: "rgba(0,0,0,0.04)" },
                 }}
-                onClick={handleMove}
+                // onClick={handleMove}
               >
                 AI-Planner
               </Button>
@@ -251,6 +257,12 @@ const Navbar = () => {
           </Button>
         </Box>
       </Drawer>
+      {chatOpen && (
+        <ChatBox
+          open={chatOpen}
+          onClose={() => setChatOpen(false)}
+        />
+      )}
     </>
   );
 };

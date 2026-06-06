@@ -49,15 +49,15 @@ const ACCEPTED = ["application/pdf", "image/png", "image/jpeg", "image/webp", "t
 const MAX_MB = 10;
 
 function fileIcon(type) {
-  if (type === "application/pdf")  return <RiFilePdfLine size={20} />;
-  if (type.startsWith("image/"))   return <RiFileImageLine size={20} />;
-  return                                  <RiFileTextLine size={20} />;
+  if (type === "application/pdf") return <RiFilePdfLine size={20} />;
+  if (type.startsWith("image/")) return <RiFileImageLine size={20} />;
+  return <RiFileTextLine size={20} />;
 }
 
 function formatSize(bytes) {
-  if (bytes < 1024)         return `₹{bytes} B`;
-  if (bytes < 1024 * 1024)  return `₹{(bytes / 1024).toFixed(1)} KB`;
-  return                          `₹{(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024) return `₹{bytes} B`;
+  if (bytes < 1024 * 1024) return `₹{(bytes / 1024).toFixed(1)} KB`;
+  return `₹{(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 // ── typing dots ───────────────────────────────
@@ -73,7 +73,7 @@ function TypingDots() {
             animationDelay: `₹{i * 0.2}s`,
             "@keyframes bounce": {
               "0%, 80%, 100%": { transform: "scale(0.7)", opacity: 0.5 },
-              "40%":           { transform: "scale(1)", opacity: 1 },
+              "40%": { transform: "scale(1)", opacity: 1 },
             },
           }}
         />
@@ -83,26 +83,26 @@ function TypingDots() {
 }
 
 // ── main component ────────────────────────────
-const ChatBox = () => {
+const ChatBox = ({ open, onClose }) => {
   const [sessionId] = useState(getSessionId);
-  const [input, setInput]           = useState("");
-  const [messages, setMessages]     = useState([
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([
     {
       sender: "bot",
       text: "Hello! I'm your **Traveya AI Concierge** ✈️\n\nTell me where you want to go, upload a flight ticket, or pick a suggestion below!",
       time: now(),
     },
   ]);
-  const [loading, setLoading]       = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
 
   // file upload state
-  const [file, setFile]             = useState(null);
-  const [dragging, setDragging]     = useState(false);
+  const [file, setFile] = useState(null);
+  const [dragging, setDragging] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("idle"); // idle | uploading | success | error
-  const [uploadError, setUploadError]   = useState("");
+  const [uploadError, setUploadError] = useState("");
 
-  const chatEndRef  = useRef(null);
+  const chatEndRef = useRef(null);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -168,8 +168,8 @@ const ChatBox = () => {
     setFile(selected);
   }
 
-  function onDragOver(e)  { e.preventDefault(); setDragging(true); }
-  function onDragLeave()  { setDragging(false); }
+  function onDragOver(e) { e.preventDefault(); setDragging(true); }
+  function onDragLeave() { setDragging(false); }
   function onDrop(e) {
     e.preventDefault(); setDragging(false);
     const f = e.dataTransfer.files[0];
@@ -203,24 +203,49 @@ const ChatBox = () => {
   }
 
   const dropBorderColor = () => {
-    if (dragging)                   return "#f6543b";
-    if (uploadStatus === "error")   return "#e74c3c";
+    if (dragging) return "#f6543b";
+    if (uploadStatus === "error") return "#e74c3c";
     if (uploadStatus === "success") return "#00b894";
-    if (file)                       return "#636e72";
+    if (file) return "#636e72";
     return "#e0e0e0";
   };
 
+  if (!open) return null;
+
   return (
-    <Box sx={{ maxWidth: 780, mx: "auto", mt: 4, px: { xs: 1, sm: 2 } }}>
+    <Box 
+    sx={{
+      position: "fixed",
+      bottom: 20,
+      right: 20,
+      width: 420,
+      height: 650,
+      zIndex: 9999,
+      bgcolor: "#fff",
+      borderRadius: "24px",
+      overflow: "hidden",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+      display: "flex",
+      flexDirection: "column",
+    }}
+    >
       {/* ── Header ── */}
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+      <Box sx={{
+    bgcolor: "#f6543b",
+    color: "#fff",
+    px: 2,
+    py: 1.5,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Avatar sx={{ bgcolor: "#f6543b", width: 44, height: 44 }}>
             <RiRobot2Line size={22} />
           </Avatar>
           <Box>
             <Typography sx={{ fontWeight: 700, fontSize: "1rem", color: "#2d3436" }}>
-              Traveya Concierge
+              Raveya Concierge
             </Typography>
             <Typography sx={{ fontSize: "0.72rem", color: "#00b894", fontWeight: 600 }}>
               ● AI Online
@@ -431,7 +456,7 @@ const ChatBox = () => {
           disabled={!input.trim() || loading}
           sx={{
             bgcolor: !input.trim() || loading ? "#f0f0f0" : "#f6543b",
-            color:   !input.trim() || loading ? "#b2bec3" : "#fff",
+            color: !input.trim() || loading ? "#b2bec3" : "#fff",
             width: 36, height: 36, flexShrink: 0,
             transition: "all 0.2s",
             "&:hover": { bgcolor: !input.trim() || loading ? "#f0f0f0" : "#e0432c" },
